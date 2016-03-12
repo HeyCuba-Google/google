@@ -3,7 +3,7 @@
 	<serviceDescription>Performs search on Google.com</serviceDescription>
 	<creatorEmail>anabetsy001@gmail.com</creatorEmail>
 	<!--serviceCategory: negocios,ocio,academico,social,comunicaciones,informativo,adulto,otros-->
-	<serviceCategory>busqueda</serviceCategory>
+	<serviceCategory>informativo</serviceCategory>
 	<serviceUsage>
 		<![CDATA[
 			Escriba un nuevo email a {APRETASTE_EMAIL} y en el asunto ponga la palabra [Google]
