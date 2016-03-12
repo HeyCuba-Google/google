@@ -12,7 +12,7 @@ class Google extends Service
 	 * */
 	public function _main(Request $request)
 	{
-    /*
+
 		// create a new client
 		$client = new Client();
 		$guzzle = $client->getClient();
@@ -20,24 +20,27 @@ class Google extends Service
 		$client->setClient($guzzle);
 
 		// create a crawler
-		$crawler = $client->request('GET', "https://google.com");
+		$crawler = $client->request('GET', "https://www.google.com/?q=blah");
+
+    $responses = array();
 
 		// search for result
-		$result = $crawler->filter('.health-topic-boost-wrapper')->text();
-		*/
+		$crawler->filter('.g .rc')->each(function($resultdiv) use (&$responses) {
+      $responses[] = array(
+        "title" => $resultdiv->filter('a')->text(),
+        "url" => $resultdiv->filter('a')->attr("href"),
+        "note" => $resultdiv->filter('.st')->text()
+      );
+    });
 
-    $web = file_get_contents("http://google.com");
-    echo $web;
-
-    exit;
-
-    $responses = array(
-      array("title"=>"Page Title One", "url"=>"http://url.one", "note"=>"description of the page"),
-      array("title"=>"Page Title Ten", "url"=>"http://url.one", "note"=>"description of the page"),
-      array("title"=>"Page Title two", "url"=>"http://url.one", "note"=>"description of the page"),
-      array("title"=>"Page Title Three", "url"=>"http://url.one", "note"=>"description of the page"),
-      array("title"=>"Page Title Four", "url"=>"http://url.one", "note"=>"description of the page")
-    );
+    // $web = file_get_contents("http://google.com");
+    // echo $web;
+    //
+    // exit;
+    //
+    // foreach ($responses as $key => $value) {
+    //   echo "Value: $value\n";
+    // }
 
 		// create a json object to send to the template
 		$responseContent = array(
