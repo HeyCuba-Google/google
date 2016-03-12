@@ -12,39 +12,52 @@ class Google extends Service
 	 * */
 	public function _main(Request $request)
 	{
-
 		// create a new client
 		$client = new Client();
 		$guzzle = $client->getClient();
 		$guzzle->setDefaultOption('verify', false);
 		$client->setClient($guzzle);
-
+/*
+$url = "https://www.google.com/search?hl=es&q=" .$request->query;
+$text = file_get_contents($url);
+echo $text;
+exit;
+*/
 		// create a crawler
-		$crawler = $client->request('GET', "https://www.google.com/?q=blah");
+		$crawler = $client->request('GET', "https://www.google.com/search?hl=es&q=".$request->query);
 
     $responses = array();
 
 		// search for result
-		$crawler->filter('.g .rc')->each(function($resultdiv) use (&$responses) {
+		$crawler->filter('.g')->each(function($obj) use (&$responses) {
+      // $title = $obj->filter('.r')->text();
+      // $title = $obj->filter('.r')->text();
+
+      // echo "<br/><br/>";
+      //
       $responses[] = array(
-        "title" => $resultdiv->filter('a')->text(),
-        "url" => $resultdiv->filter('a')->attr("href"),
-        "note" => $resultdiv->filter('.st')->text()
+        "title" => $obj->filter('a')->text(),
+        "url" => $obj->filter('a')->attr("href"),
+        "note" => $obj->filter('.st')->text()
       );
     });
 
-    // $web = file_get_contents("http://google.com");
-    // echo $web;
-    //
-    // exit;
-    //
-    // foreach ($responses as $key => $value) {
-    //   echo "Value: $value\n";
-    // }
+  //  print_r($responses);
+  //   exit;
+
+     //$web = file_get_contents("http://google.com");
+     //echo $web;
+
+     //exit;
+
+     //foreach ($responses as $key => $value) {
+     //echo "Value: $value\n";
+     //}
 
 		// create a json object to send to the template
+    // echo $request -> query;
 		$responseContent = array(
-			"query" => "racing cars",
+			"query" => $request->query,
 			"responses" => $responses
 		);
 
