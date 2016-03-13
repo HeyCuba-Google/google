@@ -51,8 +51,9 @@ exit;
         if (!empty($st_tag->count())) {
           $result["note"] = $st_tag->text();
         }
-
+        if($result["characters"] != 0){
         $responses[] = $result;
+      }
       }
   });
 
@@ -84,7 +85,7 @@ exit;
 
 		// create the response
 		$response = new Response();
-		$response->setResponseSubject($query);
+		$response->setResponseSubject(" Respuesta del servicio google");
 		$response->createFromTemplate($template, $responseContent);
 		return $response;
 	}
