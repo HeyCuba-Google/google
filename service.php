@@ -35,13 +35,15 @@ exit;
       $a_tags = $obj->filter('a');
 
       if (!empty($a_tags->count())){
-        $subject = $a_tags->attr("href");
-        $trimmed = str_replace('/url?q=', "", $subject);
+        $address = parse_url($a_tags->attr("href"));
+        parse_str($address["query"], $address);
+        $address = $address["q"];
 
         $result = array(
           "title" => $a_tags->text(),
-          "url" => $trimmed,
-          "note" => ""
+          "url" => $address,
+          "note" => "",
+          "characters" => round(strlen(file_get_contents($address))/1024)
         );
 
         $st_tag = $obj->filter('.st');
