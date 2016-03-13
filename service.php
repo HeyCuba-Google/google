@@ -28,19 +28,32 @@ exit;
 
     $responses = array();
 
-		// search for result
-		$crawler->filter('.g')->each(function($obj) use (&$responses) {
-      // $title = $obj->filter('.r')->text();
-      // $title = $obj->filter('.r')->text();
+    $g_tags = $crawler->filter('.g');
 
-      // echo "<br/><br/>";
-      //
-      $responses[] = array(
-        "title" => $obj->filter('a')->text(),
-        "url" => $obj->filter('a')->attr("href"),
-        "note" => $obj->filter('.st')->text()
-      );
-    });
+		// search for result
+		$g_tags->each(function($obj, $i) use (&$responses) {
+      $a_tags = $obj->filter('a');
+
+      if (!empty($a_tags->count())){
+        $subject = $a_tags->attr("href");
+        $trimmed = str_replace('/url?q=', "", $subject);
+
+        $result = array(
+          "title" => $a_tags->text(),
+          "url" => $trimmed,
+          "note" => ""
+        );
+
+        $st_tag = $obj->filter('.st');
+
+        if (!empty($st_tag->count())) {
+          $result["note"] = $st_tag->text();
+        }
+
+        $responses[] = $result;
+      }
+  });
+
 
   //  print_r($responses);
   //   exit;
@@ -61,10 +74,16 @@ exit;
 			"responses" => $responses
 		);
 
+    if (empty($responses)) {
+      $template = "empty.tpl";
+    } else {
+      $template = "basic.tpl";
+    }
+
 		// create the response
 		$response = new Response();
-		$response->setResponseSubject("[RESPONSE_EMAIL_SUBJECT]");
-		$response->createFromTemplate("basic.tpl", $responseContent);
+		$response->setResponseSubject($query);
+		$response->createFromTemplate($template, $responseContent);
 		return $response;
 	}
 }
